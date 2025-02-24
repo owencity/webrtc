@@ -10,7 +10,8 @@ WebRTC signaling 위한 개인 프로젝트
     - 내부망
 - 현실에서는 대부분 NAT(Network Address Translation) 또는 방화벽 뒤에 있음
 - 공인 IP없이 외부에서 직접 접속 불가 
-그래서 P2P 연결위해 SDP, ICE candidate 정보를 주고받게함
+그래서 P2P 연결위해 SDP(Session Description Protocol), 
+ICE candidate(Interactive Connectivity Establishment) 정보를 주고받게함
 - SDP는 미디어 스트림 정보 교환, ICE candidate는 IP와PORT 정보 교환 
 - 브라우저는 서로의 IP주소를 직접 알수 없다 , 위의 정보를 주고받기 위한 "중간 역할" 해줄 서버가 필요 
 이 역할을 하는것이 Signaling 서버(STOMP / Websocket / REST API)
@@ -33,6 +34,13 @@ WebRTC 에는 Signaling 기능이 없어서 따로 서버측에서 구현
 
 ## STUN 사용 이유?
 - STUN(Session Traversal Utilities for NAT) 서버는 클라이언트의 "공인 IP & 포트"를 알려주는 역할을 함
+- "P2P 연결을 돕는 역할"만 함, Peer-to-Peer 이므로 그룹 영상통화는 불가 
 - NAT 내부에서는 클라이언트가 자신의 공인 IP를 직접 알수 없음
 - STUN 서버로부터 받은 공인IP & PORT를 ICE candidate로 생성
 - 대기업 네트워크 나 일부 ISP에서는 STUN이 동작하지않을수 있음 이때 TURN 서버가 필요
+- 예 : 1:1 영상 통화 (P2P 연결)
+## SFU(Selective Forwarding Unit)? 
+- SFU서버(Janus 등 여러가지 있음)는 "미디어 데이터를 중계 하는 서버"
+- 각 Peer는 SFU에 미디어 스트림을 보내고, SFU가 이 스트림을 여러 Peer에게 전달 
+- P2P 연결이 아니라 중앙 서버를 통한 다중 접속(1:N , N:N)이 가능 
+- 예 : 그룹영상 통화, 라이브 스트리밍, Zoom
